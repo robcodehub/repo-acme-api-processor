@@ -5,10 +5,12 @@
 <head>
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js'></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
 </head>
 
 <body>
 
+<a href="#companies">Companies</a>
 
   <div id="data">
 
@@ -19,6 +21,11 @@
 
     const divData = document.querySelector('#data');
 
+    let companies = [];
+    let products = [];
+    let offerings = [];
+
+
 
     const loadData = async()=> {
       const urls = [
@@ -27,22 +34,43 @@
       'https://acme-users-api-rev.herokuapp.com/api/offerings'
         ];
       const responses = await Promise.all(urls.map ( url => axios.get(url)));
-      const [companies, products, offerings] = responses.map(response => response.data);
+      [companies, products, offerings] = responses.map(response => response.data);
 
-      render(companies, products, offerings);
-  };
+
+    };
+
 
 
     const render = (comp, prod, offer) => {
-
-      let html = comp.map(comp => {
-          `<div>${comp.name}</div>`
+      let html = comp.map(company => {
+          return `<div>${company.name}</div>`
       }).join('');
 
+
       divData.innerHTML = html;
-    };
+      console.log("comp = ", comp);
+      console.log("html = ", html);
+
+    }
+
+
+
+window.addEventListener('load', () => {
 
   loadData();
+
+});
+
+
+window.addEventListener('hashchange',() => {
+  let hashId = window.location.hash.slice(1);
+
+  render(companies, products, offerings);
+
+
+});
+
+
 
   </script>
 
